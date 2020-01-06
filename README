@@ -1,0 +1,8 @@
+Download and make executable:
+
+chmod 755 $HOME/Downloads/minimal-tex
+
+Usage:
+  minimal-tex <file>
+  
+where <file> is assumed to be a text file.
