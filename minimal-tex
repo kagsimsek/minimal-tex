@@ -1,0 +1,60 @@
+#!/bin/bash
+
+#rm $HOME/.minimal-tex.tex
+rm .minimal-tex.tex 2>/dev/null
+
+if [ -z $1 ]
+then
+	echo "Usage:"
+	echo
+	echo "	minimal-tex file"
+	echo
+else
+
+#cat << EOF > $HOME/.minimal-tex.tex
+cat << EOF > .minimal-tex.tex
+\documentclass{article}
+\begin{document}
+\hoffset=-1in
+\voffset=-1in
+\setbox0\hbox{\begin{tabular}{l}
+\\\\
+EOF
+
+cp $1 .$1-tex
+sed -i 's/^/\\tt\{/g' .$1-tex
+sed -i 's/$/\}/g' .$1-tex
+sed -i 's/$/\\\\/g' .$1-tex
+
+#cat .$1-tex >> $HOME/.minimal-tex.tex
+cat .$1-tex >> .minimal-tex.tex
+
+#cat << EOF >> $HOME/.minimal-tex.tex
+cat << EOF >> .minimal-tex.tex
+\end{tabular}}
+\pdfpageheight=\dimexpr\ht0+\dp0\relax
+\pdfpagewidth=\wd0
+\shipout\box0
+\stop
+EOF
+
+#pdflatex $HOME/.minimal-tex.tex
+#cp $HOME/.minimal-tex.pdf $1.pdf
+#open $1.pdf
+#rm $HOME/.minimal-tex.a*
+#rm $HOME/.minimal-tex.l*
+#rm $HOME/.minimal-tex.t*
+#rm $HOME/.minimal-tex.p*
+
+pdflatex -interaction=nonstopmode .minimal-tex.tex 
+cp .minimal-tex.pdf $1.pdf
+xdg-open $1.pdf
+pdftocairo $1.pdf -png
+
+#rm .minimal-tex.a* 2>/dev/null
+#rm .minimal-tex.l* 2>/dev/null
+#rm .minimal-tex.t* 2>/dev/null
+#rm .minimal-tex.p* 2>/dev/null
+
+echo "Your pdf has been created at '$(pwd)/$1.pdf'."
+fi
